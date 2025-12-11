@@ -1,0 +1,11 @@
+<svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradWilliamsburg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fb923c" />
+      <stop offset="100%" stop-color="#ea580c" />
+    </linearGradient>
+  </defs>
+  <circle cx="48" cy="48" r="44" fill="#2d0f05" stroke="#fed7aa" stroke-width="4" />
+  <path d="M48 20 C34 20 22 34 22 48 C22 68 48 84 48 84 C48 84 74 68 74 48 C74 34 62 20 48 20Z" fill="url(#gradWilliamsburg)" stroke="#ffedd5" stroke-width="2" />
+  <path d="M36 44 L48 58 L60 44" fill="none" stroke="#fff7ed" stroke-width="4" stroke-linecap="round" />
+</svg>

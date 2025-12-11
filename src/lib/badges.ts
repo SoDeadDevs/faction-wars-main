@@ -1,0 +1,171 @@
+export type Badge = {
+  slug: string;
+  name: string;
+  description: string;
+  requirement: string;
+  image?: string;
+};
+
+export const BADGES: Badge[] = [
+  {
+    slug: "first-deploy",
+    name: "First Deployment",
+    description: "Deploy an NFT to any zone for the first time.",
+    requirement: "1 total deployment",
+    image: "/badges/first-deploy.svg",
+  },
+  {
+    slug: "early-bird",
+    name: "Early Bird",
+    description: "Deploy within the first hour of a round opening.",
+    requirement: "Deploy during first hour",
+    image: "/badges/early-bird.svg",
+  },
+  {
+    slug: "borough-sweeper",
+    name: "Borough Sweeper",
+    description: "Occupy at least 3 zones in the same round.",
+    requirement: "3 zones in one round",
+    image: "/badges/borough-sweeper.svg",
+  },
+  {
+    slug: "full-sweep",
+    name: "Full Sweep",
+    description: "Secure deployments in every zone in a single round.",
+    requirement: "All zones in one round",
+    image: "/badges/full-sweep.svg",
+  },
+  {
+    slug: "weekly-grinder",
+    name: "Weekly Grinder",
+    description: "Deploy in 4 consecutive weeks.",
+    requirement: "4 weeks streak",
+    image: "/badges/weekly-grinder.svg",
+  },
+  {
+    slug: "faction-loyalist",
+    name: "Faction Loyalist",
+    description: "Stay in the same faction for 60+ days.",
+    requirement: "60 day faction loyalty",
+    image: "/badges/faction-loyalist.svg",
+  },
+  {
+    slug: "bat-faction",
+    name: "Bat Faction",
+    description: "Join the Bat Faction.",
+    requirement: "Join Bats",
+    image: "/badges/bat-faction.svg",
+  },
+  {
+    slug: "lycan-faction",
+    name: "Lycan Faction",
+    description: "Join the Lycan Faction.",
+    requirement: "Join Lycans",
+    image: "/badges/lycan-faction.svg",
+  },
+  {
+    slug: "gangrel-faction",
+    name: "Gangrel Faction",
+    description: "Join the Gangrel Faction.",
+    requirement: "Join Gangrels",
+    image: "/badges/gangrel-faction.svg",
+  },
+  {
+    slug: "bat-victory",
+    name: "Bat Victory",
+    description: "Win a zone while in the Bat Faction.",
+    requirement: "Bats win a zone",
+    image: "/badges/bat-victory.svg",
+  },
+  {
+    slug: "lycan-victory",
+    name: "Lycan Victory",
+    description: "Win a zone while in the Lycan Faction.",
+    requirement: "Lycans win a zone",
+    image: "/badges/lycan-victory.svg",
+  },
+  {
+    slug: "gangrel-victory",
+    name: "Gangrel Victory",
+    description: "Win a zone while in the Gangrel Faction.",
+    requirement: "Gangrels win a zone",
+    image: "/badges/gangrel-victory.svg",
+  },
+  {
+    slug: "zone-harlem",
+    name: "Harlem",
+    description: "Win the Harlem zone for your Faction.",
+    requirement: "Capture Harlem",
+    image: "/badges/zone-harlem.svg",
+  },
+  {
+    slug: "zone-upper-west",
+    name: "Upper West",
+    description: "Win the Upper West zone for your Faction.",
+    requirement: "Capture Upper West",
+    image: "/badges/zone-upper-west.svg",
+  },
+  {
+    slug: "zone-upper-east",
+    name: "Upper East",
+    description: "Win the Upper East zone for your Faction.",
+    requirement: "Capture Upper East",
+    image: "/badges/zone-upper-east.svg",
+  },
+  {
+    slug: "zone-astoria",
+    name: "Astoria",
+    description: "Win the Astoria zone for your Faction.",
+    requirement: "Capture Astoria",
+    image: "/badges/zone-astoria.svg",
+  },
+  {
+    slug: "zone-midtown",
+    name: "Midtown",
+    description: "Win the Midtown zone for your Faction.",
+    requirement: "Capture Midtown",
+    image: "/badges/zone-midtown.svg",
+  },
+  {
+    slug: "zone-lic",
+    name: "Long Island City",
+    description: "Win the Long Island City zone for your Faction.",
+    requirement: "Capture LIC",
+    image: "/badges/zone-lic.svg",
+  },
+  {
+    slug: "zone-soho",
+    name: "SoHo",
+    description: "Win the SoHo zone for your Faction.",
+    requirement: "Capture SoHo",
+    image: "/badges/zone-soho.svg",
+  },
+  {
+    slug: "zone-les",
+    name: "Lower East Side",
+    description: "Win the Lower East Side zone for your Faction.",
+    requirement: "Capture LES",
+    image: "/badges/zone-les.svg",
+  },
+  {
+    slug: "zone-williamsburg",
+    name: "Williamsburg",
+    description: "Win the Williamsburg zone for your Faction.",
+    requirement: "Capture Williamsburg",
+    image: "/badges/zone-williamsburg.svg",
+  },
+  {
+    slug: "zone-brooklyn-heights",
+    name: "Brooklyn Heights",
+    description: "Win the Brooklyn Heights zone for your Faction.",
+    requirement: "Capture Brooklyn Heights",
+    image: "/badges/zone-brooklyn-heights.svg",
+  },
+  {
+    slug: "zone-bushwick",
+    name: "Bushwick",
+    description: "Win the Bushwick zone for your Faction.",
+    requirement: "Capture Bushwick",
+    image: "/badges/zone-bushwick.svg",
+  },
+];

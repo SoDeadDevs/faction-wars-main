@@ -1,0 +1,10 @@
+<svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradDeploy" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee" />
+      <stop offset="100%" stop-color="#2563eb" />
+    </linearGradient>
+  </defs>
+  <circle cx="48" cy="48" r="44" fill="#0f172a" stroke="#38bdf8" stroke-width="4" />
+  <path d="M48 18 L66 42 H54 V78 H42 V42 H30 Z" fill="url(#gradDeploy)" stroke="#ecfeff" stroke-width="2" stroke-linejoin="round"/>
+</svg>

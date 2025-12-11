@@ -1,0 +1,11 @@
+<svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradBatFaction" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f87171" />
+      <stop offset="100%" stop-color="#7f1d1d" />
+    </linearGradient>
+  </defs>
+  <circle cx="48" cy="48" r="44" fill="#150b0b" stroke="#fca5a5" stroke-width="4" />
+  <path d="M24 38 C30 28 42 26 48 34 C54 26 66 28 72 38 L72 62 C62 72 34 72 24 62 Z" fill="url(#gradBatFaction)" stroke="#fecaca" stroke-width="2" />
+  <path d="M36 44 C40 50 56 50 60 44" fill="none" stroke="#fecaca" stroke-width="2" />
+</svg>

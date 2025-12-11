@@ -1,0 +1,11 @@
+<svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradHarlem" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a8a29e" />
+      <stop offset="100%" stop-color="#3f3f46" />
+    </linearGradient>
+  </defs>
+  <circle cx="48" cy="48" r="44" fill="#111827" stroke="#d1d5db" stroke-width="4" />
+  <path d="M48 20 C34 20 22 32 22 46 C22 66 48 84 48 84 C48 84 74 66 74 46 C74 32 62 20 48 20Z" fill="url(#gradHarlem)" stroke="#e5e7eb" stroke-width="2" />
+  <circle cx="48" cy="46" r="10" fill="#f8fafc" />
+</svg>
