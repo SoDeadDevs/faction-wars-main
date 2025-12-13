@@ -79,7 +79,7 @@ export async function GET(req: Request) {
 
     (deployments ?? []).forEach((row) => {
       const roundId = row.round_id;
-      const zoneId = row.zone_id || row.zones?.id;
+      const zoneId = row.zone_id ?? row.zones?.[0]?.id;
       if (!roundId || !zoneId) return;
 
       if (!grouped.has(roundId)) {
