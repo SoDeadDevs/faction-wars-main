@@ -89,8 +89,8 @@ export async function GET(req: Request) {
 
       if (!zoneMap.has(zoneId)) {
         zoneMap.set(zoneId, {
-          zone_slug: row.zones?.slug ?? "unknown",
-          zone_name: row.zones?.name ?? "Unknown Zone",
+          zone_slug: row.zones?.[0]?.slug ?? "unknown",
+          zone_name: row.zones?.[0]?.name ?? "Unknown Zone",
           totals: {},
         });
       }
@@ -135,7 +135,7 @@ function rowFactionName(
   const match = rows.find(
     (row) =>
       row.round_id === roundId &&
-      (row.zones?.slug ?? "unknown") === zoneSlug &&
+      (row.zones?.[0]?.slug ?? "unknown") === zoneSlug &&
       ((row.faction_slug ?? row.wallets?.faction?.slug ?? "unaffiliated") === factionSlug)
   );
   return match?.faction_name ?? match?.wallets?.faction?.name ?? null;
@@ -150,7 +150,7 @@ function rowFactionColor(
   const match = rows.find(
     (row) =>
       row.round_id === roundId &&
-      (row.zones?.slug ?? "unknown") === zoneSlug &&
+      (row.zones?.[0]?.slug ?? "unknown") === zoneSlug &&
       ((row.faction_slug ?? row.wallets?.faction?.slug ?? "unaffiliated") === factionSlug)
   );
   return match?.faction_color ?? match?.wallets?.faction?.color ?? null;
