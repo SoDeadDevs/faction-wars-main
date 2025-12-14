@@ -40,7 +40,8 @@ export async function GET() {
     return NextResponse.json({ error: lockedErr.message }, { status: 500 });
   }
 
-  let targetRound = lockedRounds?.[0] ?? null;
+  let targetRound: { id: string; week_start: string; week_end: string; status: string; updated_at: string } | null =
+    lockedRounds?.[0] ?? null;
 
   if (!targetRound) {
     const { data: fallbackOpen } = await supabaseAdmin
@@ -50,7 +51,7 @@ export async function GET() {
       .order("week_start", { ascending: true })
       .order("updated_at", { ascending: false })
       .limit(1);
-    targetRound = fallbackOpen?.[0] ?? null;
+    targetRound = (fallbackOpen?.[0] as typeof targetRound) ?? targetRound;
   }
 
   if (!targetRound) {
