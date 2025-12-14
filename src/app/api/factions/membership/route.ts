@@ -24,7 +24,18 @@ export async function GET(req: Request) {
       `
     )
     .ilike("address", address)
-    .maybeSingle();
+    .maybeSingle<{
+      address: string;
+      joined_at: string | null;
+      faction:
+        | {
+            slug: string | null;
+            name: string | null;
+            color: string | null;
+          }
+        | null
+        | { slug: string | null; name: string | null; color: string | null }[];
+    }>();
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -45,15 +56,22 @@ export async function GET(req: Request) {
   return NextResponse.json({
     membership: {
       faction: data.faction
-        ? {
-            slug: data.faction.slug,
-            name: data.faction.name,
-            color: data.faction.color,
-          }
+        ? Array.isArray(data.faction)
+          ? data.faction[0]
+            ? {
+                slug: data.faction[0]?.slug ?? null,
+                name: data.faction[0]?.name ?? null,
+                color: data.faction[0]?.color ?? null,
+              }
+            : null
+          : {
+              slug: data.faction.slug,
+              name: data.faction.name,
+              color: data.faction.color,
+            }
         : null,
       joined_at: data.joined_at,
       unlock_at: unlockAt,
     },
   });
 }
-
