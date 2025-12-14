@@ -96,7 +96,7 @@ export async function GET(req: Request) {
       }
 
       const entry = zoneMap.get(zoneId)!;
-      const factionSlug = row.wallets?.faction?.slug ?? "unaffiliated";
+      const factionSlug = row.wallets?.[0]?.faction?.slug ?? "unaffiliated";
       entry.totals[factionSlug] = (entry.totals[factionSlug] ?? 0) + 1;
     });
 
@@ -136,9 +136,9 @@ function rowFactionName(
     (row) =>
       row.round_id === roundId &&
       (row.zones?.[0]?.slug ?? "unknown") === zoneSlug &&
-      ((row.faction_slug ?? row.wallets?.faction?.slug ?? "unaffiliated") === factionSlug)
+      ((row.faction_slug ?? row.wallets?.[0]?.faction?.slug ?? "unaffiliated") === factionSlug)
   );
-  return match?.faction_name ?? match?.wallets?.faction?.name ?? null;
+  return match?.faction_name ?? match?.wallets?.[0]?.faction?.name ?? null;
 }
 
 function rowFactionColor(
@@ -151,7 +151,7 @@ function rowFactionColor(
     (row) =>
       row.round_id === roundId &&
       (row.zones?.[0]?.slug ?? "unknown") === zoneSlug &&
-      ((row.faction_slug ?? row.wallets?.faction?.slug ?? "unaffiliated") === factionSlug)
+      ((row.faction_slug ?? row.wallets?.[0]?.faction?.slug ?? "unaffiliated") === factionSlug)
   );
-  return match?.faction_color ?? match?.wallets?.faction?.color ?? null;
+  return match?.faction_color ?? match?.wallets?.[0]?.faction?.color ?? null;
 }
