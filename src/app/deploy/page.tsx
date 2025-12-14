@@ -127,26 +127,26 @@ export default function DeployPage() {
 
       {status && <p className="text-sm text-neutral-300">{status}</p>}
 
-      <div className="grid grid-cols-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 p-2 sm:p-4">
         {nfts.map((n) => {
           const isLocked = locked.has(n.mint);
           return (
             <div
               key={n.mint}
-              className={`bg-neutral-900 rounded-xl shadow-lg overflow-hidden ${isLocked ? "opacity-75" : ""}`}
+              className={`bg-neutral-900 rounded-lg sm:rounded-xl shadow-lg overflow-hidden ${isLocked ? "opacity-75" : ""}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={n.image || "/placeholder.png"}
                 alt={n.name}
-                className="w-full h-32 object-cover"
+                className="w-full h-28 sm:h-32 object-cover"
               />
               <div className="p-2 text-sm">
-                <div className="font-medium truncate">{n.name}</div>
+                <div className="font-medium truncate text-xs sm:text-sm">{n.name}</div>
 
                 <div className="mt-2 flex items-center gap-2">
                   <select
-                    className="w-full rounded-md bg-neutral-800 text-xs text-gray-200 p-1 disabled:opacity-60"
+                    className="w-full rounded-md bg-neutral-800 text-[11px] sm:text-xs text-gray-200 p-1 disabled:opacity-60"
                     value={choices[n.mint] || ""}
                     onChange={(e) => setChoice(n.mint, e.target.value)}
                     disabled={isLocked || !round || round.status !== "open"}
@@ -158,7 +158,7 @@ export default function DeployPage() {
                   </select>
 
                   {isLocked && (
-                    <span className="inline-block rounded-md bg-emerald-600/20 text-emerald-300 text-[10px] px-2 py-1">
+                    <span className="inline-block rounded-md bg-emerald-600/20 text-emerald-300 text-[10px] sm:text-[11px] px-2 py-1">
                       Locked
                     </span>
                   )}
