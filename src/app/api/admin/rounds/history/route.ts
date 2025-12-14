@@ -75,9 +75,11 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: depErr.message }, { status: 500 });
     }
 
+    const deploymentRows = (deployments ?? []) as any[];
+
     const grouped = new Map<string, Map<string, ZoneWinner>>();
 
-    (deployments ?? []).forEach((row) => {
+    deploymentRows.forEach((row) => {
       const roundId = row.round_id;
       const zoneId = row.zone_id ?? row.zones?.[0]?.id;
       if (!roundId || !zoneId) return;
@@ -110,8 +112,8 @@ export async function GET(req: Request) {
         if (entries.length === 1 || (entries[0] && entries[1] && entries[0][1] > entries[1][1])) {
           zone.winner = {
             slug: entries[0][0],
-            name: rowFactionName(deployments ?? [], round.id, zone.zone_slug, entries[0][0]),
-            color: rowFactionColor(deployments ?? [], round.id, zone.zone_slug, entries[0][0]),
+            name: rowFactionName(deploymentRows, round.id, zone.zone_slug, entries[0][0]),
+            color: rowFactionColor(deploymentRows, round.id, zone.zone_slug, entries[0][0]),
           };
         }
         zones.push(zone);
