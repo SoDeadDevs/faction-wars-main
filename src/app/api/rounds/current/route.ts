@@ -34,7 +34,17 @@ export async function GET() {
       (r) => r.status === "open" && today >= r.week_start && today <= r.week_end
     ) ?? null;
 
-  if (!current) return NextResponse.json({ round: null, zones: [] });
+  const fallbackOpen = current
+    ? null
+    : (rounds ?? []).find((r) => r.status === "open") ?? null;
+
+  const fallbackLocked = current || fallbackOpen
+    ? null
+    : (rounds ?? []).find((r) => ["locked", "tallied"].includes(r.status)) ?? null;
+
+  const target = current ?? fallbackOpen ?? fallbackLocked ?? null;
+
+  if (!target) return NextResponse.json({ round: null, zones: [] });
 
   const { data: zones, error: zErr } = await supabase
     .from("zones")
@@ -43,5 +53,5 @@ export async function GET() {
 
   if (zErr) return NextResponse.json({ error: zErr.message }, { status: 500 });
 
-  return NextResponse.json({ round: current, zones });
+  return NextResponse.json({ round: target, zones });
 }
