@@ -247,8 +247,8 @@ export default function NycMap() {
   }, [byZone, factionColors, mapReady]);
 
   return (
-    <div className="w-full min-h-[400px] h-[70vh] rounded-2xl overflow-hidden border border-neutral-800">
-      <div ref={containerRef} className="w-full h-full" />
+    <div className="w-full min-h-[320px] h-[55vh] md:h-[65vh] max-h-[820px] rounded-2xl overflow-x-hidden overflow-y-auto border border-neutral-800">
+      <div ref={containerRef} className="w-full min-h-[900px] h-[900px]" />
     </div>
   );
 }

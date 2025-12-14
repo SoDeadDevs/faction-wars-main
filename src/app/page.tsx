@@ -106,8 +106,10 @@ export default function Home() {
         )}
       </div>
 
-      <div className="pt-2">
-        <NycMap />
+      <div className="pt-2 flex justify-center">
+        <div className="w-full max-w-6xl">
+          <NycMap />
+        </div>
       </div>
 
       {showProfile && (
