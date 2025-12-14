@@ -21,6 +21,16 @@ type RoundResponse = {
   zones: ZoneWinner[];
 };
 
+type DeploymentRow = {
+  round_id: string;
+  zone_id: string | null;
+  faction_slug: string | null;
+  faction_name: string | null;
+  faction_color: string | null;
+  zones: { id: string; slug: string; name: string }[] | null;
+  wallets: { faction: { slug: string | null; name: string | null; color: string | null } | null }[] | null;
+};
+
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
@@ -69,13 +79,14 @@ export async function GET(req: Request) {
           )
         `
       )
-      .in("round_id", roundIds);
+      .in("round_id", roundIds)
+      .returns<DeploymentRow[]>();
 
     if (depErr) {
       return NextResponse.json({ error: depErr.message }, { status: 500 });
     }
 
-    const deploymentRows = (deployments ?? []) as any[];
+    const deploymentRows: DeploymentRow[] = deployments ?? [];
 
     const grouped = new Map<string, Map<string, ZoneWinner>>();
 
@@ -106,9 +117,9 @@ export async function GET(req: Request) {
       const zoneMap = grouped.get(round.id) ?? new Map();
       const zones: ZoneWinner[] = [];
 
-      zoneMap.forEach((zone) => {
+      zoneMap.forEach((zone: ZoneWinner) => {
         const totals = zone.totals;
-        const entries = Object.entries(totals).sort((a, b) => b[1] - a[1]);
+        const entries = (Object.entries(totals) as [string, number][]).sort((a, b) => b[1] - a[1]);
         if (entries.length === 1 || (entries[0] && entries[1] && entries[0][1] > entries[1][1])) {
           zone.winner = {
             slug: entries[0][0],
@@ -129,7 +140,7 @@ export async function GET(req: Request) {
 }
 
 function rowFactionName(
-  rows: any[],
+  rows: DeploymentRow[],
   roundId: string,
   zoneSlug: string,
   factionSlug: string
@@ -144,7 +155,7 @@ function rowFactionName(
 }
 
 function rowFactionColor(
-  rows: any[],
+  rows: DeploymentRow[],
   roundId: string,
   zoneSlug: string,
   factionSlug: string
