@@ -49,18 +49,37 @@ export async function GET(req: Request) {
         `
       )
       .ilike("address", wallet)
-      .maybeSingle();
+      .maybeSingle<{
+        address: string;
+        joined_faction_id: string | null;
+        faction:
+          | {
+              slug: string | null;
+              name: string | null;
+              color: string | null;
+            }
+          | null
+          | { slug: string | null; name: string | null; color: string | null }[];
+      }>();
 
     if (walletErr) {
       return NextResponse.json({ error: walletErr.message }, { status: 500 });
     }
 
     const faction = walletRow?.faction
-      ? {
-          slug: walletRow.faction.slug,
-          name: walletRow.faction.name,
-          color: walletRow.faction.color,
-        }
+      ? Array.isArray(walletRow.faction)
+        ? walletRow.faction[0]
+          ? {
+              slug: walletRow.faction[0]?.slug ?? null,
+              name: walletRow.faction[0]?.name ?? null,
+              color: walletRow.faction[0]?.color ?? null,
+            }
+          : null
+        : {
+            slug: walletRow.faction.slug,
+            name: walletRow.faction.name,
+            color: walletRow.faction.color,
+          }
       : null;
 
     return NextResponse.json({
