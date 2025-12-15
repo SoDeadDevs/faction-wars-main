@@ -144,6 +144,15 @@ export default function Home() {
             className="w-full max-w-4xl max-h-[80vh] overflow-y-auto rounded-2xl border border-neutral-800 bg-neutral-950 p-4 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowAchievements(false)}
+                className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-full border border-neutral-700 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-100"
+                aria-label="Close achievements"
+              >
+                ×
+              </button>
+            </div>
             <AchievementsCard />
           </div>
         </div>
