@@ -81,13 +81,13 @@ export default function Home() {
         </Link>
         <button
           onClick={() => setShowProfile(true)}
-          className="rounded-xl border border-neutral-800 px-4 py-2 transition-colors hover:bg-[#7f1d1d] hover:text-white"
+          className="rounded-xl border border-neutral-800 px-4 py-2 transition-colors hover:bg-[#7f1d1d] hover:text-white cursor-pointer"
         >
           Profile
         </button>
         <button
           onClick={() => setShowAchievements(true)}
-          className="rounded-xl border border-neutral-800 px-4 py-2 transition-colors hover:bg-[#7f1d1d] hover:text-white"
+          className="rounded-xl border border-neutral-800 px-4 py-2 transition-colors hover:bg-[#7f1d1d] hover:text-white cursor-pointer"
         >
           Achievements
         </button>
