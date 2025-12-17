@@ -45,7 +45,9 @@ export async function GET() {
       (r) => r.status === "open" && today >= r.week_start && !hasRoundEnded(r.week_end)
     ) ?? null;
 
-  if (!current) return NextResponse.json({ round: null, zones: [] });
+  const target = current;
+
+  if (!target) return NextResponse.json({ round: null, zones: [] });
 
   const { data: zones, error: zErr } = await supabase
     .from("zones")
