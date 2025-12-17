@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { assertSupabaseAdmin } from "@/lib/supabase-admin";
 import { awardBadgeToWallet, zoneBadgeSlugFromSlug } from "@/lib/badge-awards";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 function hasRoundEnded(weekEnd: string | null | undefined): boolean {
   if (!weekEnd) return false;
   const end = new Date(weekEnd);
