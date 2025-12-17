@@ -2,6 +2,14 @@ import { NextResponse } from "next/server";
 import { assertSupabaseAdmin } from "@/lib/supabase-admin";
 import { awardBadgeToWallet, zoneBadgeSlugFromSlug } from "@/lib/badge-awards";
 
+function hasRoundEnded(weekEnd: string | null | undefined): boolean {
+  if (!weekEnd) return false;
+  const end = new Date(weekEnd);
+  if (Number.isNaN(end.getTime())) return false;
+  end.setHours(23, 59, 59, 999);
+  return Date.now() > end.getTime();
+}
+
 type DeploymentRow = {
   zone_id: string;
   faction_slug: string | null;
@@ -23,7 +31,7 @@ export async function GET() {
     .eq("status", "open");
 
   const expiredIds =
-    openRounds?.filter((r) => today > r.week_end).map((r) => r.id) ?? [];
+    openRounds?.filter((r) => hasRoundEnded(r.week_end)).map((r) => r.id) ?? [];
   if (expiredIds.length) {
     await supabaseAdmin.from("rounds").update({ status: "locked" }).in("id", expiredIds);
   }

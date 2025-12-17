@@ -3,6 +3,14 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
+function hasRoundEnded(weekEnd: string | null | undefined): boolean {
+  if (!weekEnd) return false;
+  const end = new Date(weekEnd);
+  if (Number.isNaN(end.getTime())) return false;
+  end.setHours(23, 59, 59, 999);
+  return Date.now() > end.getTime();
+}
+
 export async function GET() {
   // find a round where today is between start and end; pick the first 'open' by preference
   const { data: rounds, error: rErr } = await supabase
@@ -12,10 +20,9 @@ export async function GET() {
 
   if (rErr) return NextResponse.json({ error: rErr.message }, { status: 500 });
 
-  const today = new Date().toISOString().slice(0, 10);
   const expiredIds =
     rounds
-      ?.filter((r) => r.status === "open" && today > r.week_end)
+      ?.filter((r) => r.status === "open" && hasRoundEnded(r.week_end))
       .map((r) => r.id) ?? [];
 
   if (expiredIds.length) {
@@ -29,9 +36,11 @@ export async function GET() {
     }
   }
 
+  const today = new Date().toISOString().slice(0, 10);
+
   const current =
     (rounds ?? []).find(
-      (r) => r.status === "open" && today >= r.week_start && today <= r.week_end
+      (r) => r.status === "open" && today >= r.week_start && !hasRoundEnded(r.week_end)
     ) ?? null;
 
   const fallbackOpen = current
