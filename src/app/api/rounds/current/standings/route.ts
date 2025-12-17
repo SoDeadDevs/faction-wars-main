@@ -11,13 +11,46 @@ function hasRoundEnded(weekEnd: string | null | undefined): boolean {
 }
 
 type DeploymentRow = {
-  zone_id: string;
+  zone_id: string | null;
   faction_slug: string | null;
   faction_name: string | null;
   faction_color: string | null;
-  zones: { id: string; slug: string; name: string }[] | null;
-  wallets: { faction: { slug: string | null; name: string | null; color: string | null } | null }[] | null;
+  zones: { id: string; slug: string; name: string } | { id: string; slug: string; name: string }[] | null;
+  wallets:
+    | { faction: { slug: string | null; name: string | null; color: string | null } | null }
+    | { faction: { slug: string | null; name: string | null; color: string | null } | null }[]
+    | null;
 };
+
+function zoneSlugFromRow(row: DeploymentRow): string | null {
+  if (!row.zones) return null;
+  if (Array.isArray(row.zones)) return row.zones[0]?.slug ?? null;
+  return row.zones.slug ?? null;
+}
+
+function zoneNameFromRow(row: DeploymentRow): string | null {
+  if (!row.zones) return null;
+  if (Array.isArray(row.zones)) return row.zones[0]?.name ?? null;
+  return row.zones.name ?? null;
+}
+
+function zoneIdFromRow(row: DeploymentRow): string | null {
+  if (!row.zones) return null;
+  if (Array.isArray(row.zones)) return row.zones[0]?.id ?? null;
+  return row.zones.id ?? null;
+}
+
+function factionFromRow(
+  row: DeploymentRow
+): { slug: string | null; name: string | null; color: string | null } | null {
+  if (row.faction_slug || row.faction_name || row.faction_color) {
+    return { slug: row.faction_slug, name: row.faction_name, color: row.faction_color };
+  }
+  const wallets = row.wallets;
+  if (!wallets) return null;
+  const entry = Array.isArray(wallets) ? wallets[0] : wallets;
+  return entry?.faction ?? null;
+}
 
 export async function GET() {
   const supabaseAdmin = assertSupabaseAdmin();
@@ -98,13 +131,14 @@ export async function GET() {
   const factionColors: Record<string, string> = { unaffiliated: "#9ca3af" };
 
   for (const row of deployments ?? []) {
-    const zoneId = row.zone_id || row.zones?.[0]?.id;
-    const zoneSlug = row.zones?.[0]?.slug ?? "unknown";
-    const zoneName = row.zones?.[0]?.name ?? "Unknown Zone";
+    const zoneId = row.zone_id || zoneIdFromRow(row);
+    const zoneSlug = zoneSlugFromRow(row) ?? "unknown";
+    const zoneName = zoneNameFromRow(row) ?? "Unknown Zone";
     if (!zoneId) continue;
 
-    const factionSlug = row.faction_slug ?? row.wallets?.[0]?.faction?.slug ?? "unaffiliated";
-    const factionColor = row.faction_color ?? row.wallets?.[0]?.faction?.color ?? null;
+    const faction = factionFromRow(row);
+    const factionSlug = faction?.slug ?? "unaffiliated";
+    const factionColor = faction?.color ?? null;
 
     if (factionSlug && factionColor && !factionColors[factionSlug]) {
       factionColors[factionSlug] = factionColor;

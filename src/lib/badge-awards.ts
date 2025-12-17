@@ -26,6 +26,7 @@ export function factionVictoryBadgeSlugFromSlug(slug: string | null | undefined)
 export function zoneBadgeSlugFromSlug(zoneSlug: string | null | undefined): string | undefined {
   if (!zoneSlug) return undefined;
   const normalized = zoneSlug.trim().toLowerCase();
+  if (!normalized || normalized === "unknown") return undefined;
   // Badge slugs are prefixed with zone- to avoid collisions
   return `zone-${normalized}`;
 }

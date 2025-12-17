@@ -27,9 +27,42 @@ type DeploymentRow = {
   faction_slug: string | null;
   faction_name: string | null;
   faction_color: string | null;
-  zones: { id: string; slug: string; name: string }[] | null;
-  wallets: { faction: { slug: string | null; name: string | null; color: string | null } | null }[] | null;
+  zones: { id: string; slug: string; name: string } | { id: string; slug: string; name: string }[] | null;
+  wallets:
+    | { faction: { slug: string | null; name: string | null; color: string | null } | null }
+    | { faction: { slug: string | null; name: string | null; color: string | null } | null }[]
+    | null;
 };
+
+function zoneSlugFromRow(row: DeploymentRow): string | null {
+  if (!row.zones) return null;
+  if (Array.isArray(row.zones)) return row.zones[0]?.slug ?? null;
+  return row.zones.slug ?? null;
+}
+
+function zoneNameFromRow(row: DeploymentRow): string | null {
+  if (!row.zones) return null;
+  if (Array.isArray(row.zones)) return row.zones[0]?.name ?? null;
+  return row.zones.name ?? null;
+}
+
+function zoneIdFromRow(row: DeploymentRow): string | null {
+  if (!row.zones) return null;
+  if (Array.isArray(row.zones)) return row.zones[0]?.id ?? null;
+  return row.zones.id ?? null;
+}
+
+function factionFromRow(row: DeploymentRow): { slug: string | null; name: string | null; color: string | null } | null {
+  const faction =
+    row.faction_slug || row.faction_name || row.faction_color
+      ? { slug: row.faction_slug, name: row.faction_name, color: row.faction_color }
+      : null;
+  if (faction?.slug || faction?.name || faction?.color) return faction;
+  const wallets = row.wallets;
+  if (!wallets) return null;
+  const entry = Array.isArray(wallets) ? wallets[0] : wallets;
+  return entry?.faction ?? null;
+}
 
 export async function GET(req: Request) {
   try {
@@ -92,7 +125,7 @@ export async function GET(req: Request) {
 
     deploymentRows.forEach((row) => {
       const roundId = row.round_id;
-      const zoneId = row.zone_id ?? row.zones?.[0]?.id;
+      const zoneId = row.zone_id ?? zoneIdFromRow(row);
       if (!roundId || !zoneId) return;
 
       if (!grouped.has(roundId)) {
@@ -102,14 +135,15 @@ export async function GET(req: Request) {
 
       if (!zoneMap.has(zoneId)) {
         zoneMap.set(zoneId, {
-          zone_slug: row.zones?.[0]?.slug ?? "unknown",
-          zone_name: row.zones?.[0]?.name ?? "Unknown Zone",
+          zone_slug: zoneSlugFromRow(row) ?? "unknown",
+          zone_name: zoneNameFromRow(row) ?? "Unknown Zone",
           totals: {},
         });
       }
 
       const entry = zoneMap.get(zoneId)!;
-      const factionSlug = row.wallets?.[0]?.faction?.slug ?? "unaffiliated";
+      const faction = factionFromRow(row);
+      const factionSlug = faction?.slug ?? "unaffiliated";
       entry.totals[factionSlug] = (entry.totals[factionSlug] ?? 0) + 1;
     });
 
@@ -148,10 +182,11 @@ function rowFactionName(
   const match = rows.find(
     (row) =>
       row.round_id === roundId &&
-      (row.zones?.[0]?.slug ?? "unknown") === zoneSlug &&
-      ((row.faction_slug ?? row.wallets?.[0]?.faction?.slug ?? "unaffiliated") === factionSlug)
+      (zoneSlugFromRow(row) ?? "unknown") === zoneSlug &&
+      ((row.faction_slug ?? factionFromRow(row)?.slug ?? "unaffiliated") === factionSlug)
   );
-  return match?.faction_name ?? match?.wallets?.[0]?.faction?.name ?? null;
+  const faction = factionFromRow(match as DeploymentRow);
+  return match?.faction_name ?? faction?.name ?? null;
 }
 
 function rowFactionColor(
@@ -163,8 +198,9 @@ function rowFactionColor(
   const match = rows.find(
     (row) =>
       row.round_id === roundId &&
-      (row.zones?.[0]?.slug ?? "unknown") === zoneSlug &&
-      ((row.faction_slug ?? row.wallets?.[0]?.faction?.slug ?? "unaffiliated") === factionSlug)
+      (zoneSlugFromRow(row) ?? "unknown") === zoneSlug &&
+      ((row.faction_slug ?? factionFromRow(row)?.slug ?? "unaffiliated") === factionSlug)
   );
-  return match?.faction_color ?? match?.wallets?.[0]?.faction?.color ?? null;
+  const faction = factionFromRow(match as DeploymentRow);
+  return match?.faction_color ?? faction?.color ?? null;
 }
