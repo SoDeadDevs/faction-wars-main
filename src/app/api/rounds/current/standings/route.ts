@@ -15,10 +15,8 @@ type DeploymentRow = {
   faction_slug: string | null;
   faction_name: string | null;
   faction_color: string | null;
-  zones: { id: string; slug: string; name: string } | null;
-  wallets: {
-    faction: { slug: string | null; name: string | null; color: string | null } | null;
-  } | null;
+  zones: { id: string; slug: string; name: string }[] | null;
+  wallets: { faction: { slug: string | null; name: string | null; color: string | null } | null }[] | null;
 };
 
 export async function GET() {
@@ -100,13 +98,13 @@ export async function GET() {
   const factionColors: Record<string, string> = { unaffiliated: "#9ca3af" };
 
   for (const row of deployments ?? []) {
-    const zoneId = row.zone_id || row.zones?.id;
-    const zoneSlug = row.zones?.slug ?? "unknown";
-    const zoneName = row.zones?.name ?? "Unknown Zone";
+    const zoneId = row.zone_id || row.zones?.[0]?.id;
+    const zoneSlug = row.zones?.[0]?.slug ?? "unknown";
+    const zoneName = row.zones?.[0]?.name ?? "Unknown Zone";
     if (!zoneId) continue;
 
-    const factionSlug = row.faction_slug ?? row.wallets?.faction?.slug ?? "unaffiliated";
-    const factionColor = row.faction_color ?? row.wallets?.faction?.color ?? null;
+    const factionSlug = row.faction_slug ?? row.wallets?.[0]?.faction?.slug ?? "unaffiliated";
+    const factionColor = row.faction_color ?? row.wallets?.[0]?.faction?.color ?? null;
 
     if (factionSlug && factionColor && !factionColors[factionSlug]) {
       factionColors[factionSlug] = factionColor;
