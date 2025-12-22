@@ -19,6 +19,8 @@ export default function DeployPage() {
   const [choices, setChoices] = useState<Record<string, string>>({}); // mint -> zone_slug (UI selection + prefill)
   const [locked, setLocked] = useState<Set<string>>(new Set());        // mints already deployed this round
   const [status, setStatus] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [randomizing, setRandomizing] = useState(false);
 
   // Load current round + zones
   useEffect(() => {
@@ -72,6 +74,24 @@ export default function DeployPage() {
     setChoices((prev) => ({ ...prev, [mint]: zone_slug }));
   }
 
+  function randomDeployAll() {
+    if (!zones.length) return;
+    setRandomizing(true);
+    setStatus("Assigning random zones…");
+    try {
+      const unlockedMints = nfts.filter((n) => !locked.has(n.mint)).map((n) => n.mint);
+      const newChoices: Record<string, string> = { ...choices };
+      unlockedMints.forEach((mint) => {
+        const zone = zones[Math.floor(Math.random() * zones.length)];
+        if (zone?.slug) newChoices[mint] = zone.slug;
+      });
+      setChoices(newChoices);
+      setStatus(`Assigned ${unlockedMints.length} NFT(s) to random zones. Click Save to deploy.`);
+    } finally {
+      setRandomizing(false);
+    }
+  }
+
   async function save() {
     if (!connected || !address) return setStatus("Connect your wallet first.");
     if (!round?.id) return setStatus("No open round.");
@@ -83,6 +103,7 @@ export default function DeployPage() {
 
     if (!items.length) return setStatus("Nothing to save (already locked or no selection).");
 
+    setSaving(true);
     setStatus("Saving deployments…");
     try {
       const res = await fetch("/api/deployments/bulk", {
@@ -102,6 +123,8 @@ export default function DeployPage() {
       setStatus(`Saved ${data.count ?? saved.length} deployment(s).${data.skipped?.length ? ` Skipped ${data.skipped.length} already locked.` : ""}`);
     } catch (e: any) {
       setStatus(e?.message || "Network error while saving.");
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -126,6 +149,16 @@ export default function DeployPage() {
       )}
 
       {status && <p className="text-sm text-neutral-300">{status}</p>}
+
+      <div className="flex flex-wrap gap-3 items-center">
+        <button
+          onClick={randomDeployAll}
+          className="rounded-lg border border-neutral-800 px-3 py-2 text-sm font-medium text-neutral-100 transition-colors hover:bg-[#7f1d1d] hover:text-white cursor-pointer disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-neutral-100"
+          disabled={!zones.length || !nfts.length || randomizing}
+        >
+          {randomizing ? "Assigning…" : "Random Zone Selection"}
+        </button>
+      </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 p-2 sm:p-4">
         {nfts.map((n) => {
@@ -171,10 +204,12 @@ export default function DeployPage() {
 
       <button
         onClick={save}
-        className="rounded-xl border border-neutral-800 px-4 py-2 font-medium text-neutral-100 transition-colors hover:bg-[#7f1d1d] hover:text-white disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-neutral-100"
-        disabled={!connected || !round || round.status !== "open"}
+        className={`rounded-xl border border-neutral-800 px-4 py-2 font-medium text-neutral-100 transition-colors ${
+          saving ? "bg-[#7f1d1d] text-white opacity-80" : "hover:bg-[#7f1d1d] hover:text-white"
+        } cursor-pointer disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-neutral-100`}
+        disabled={!connected || !round || round.status !== "open" || saving}
       >
-        Save Deployments
+        {saving ? "Saving…" : "Save Deployments"}
       </button>
     </div>
   );
