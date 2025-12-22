@@ -22,18 +22,25 @@ export const BADGES: Badge[] = [
     image: "/badges/early-bird.svg",
   },
   {
+    slug: "grunt",
+    name: "Grunt",
+    description: "First time deploying to any zone.",
+    requirement: "Deploy an NFT to any zone for the first time",
+    image: "/badges/grunt.svg",
+  },
+  {
+    slug: "novice",
+    name: "Novice",
+    description: "Deploy NFTs to a total of 3 rounds.",
+    requirement: "Deploy NFTs to 3 rounds",
+    image: "/badges/novice.svg",
+  },
+  {
     slug: "borough-sweeper",
     name: "Borough Sweeper",
     description: "Occupy at least 3 zones in the same round.",
     requirement: "3 zones in one round",
     image: "/badges/borough-sweeper.svg",
-  },
-  {
-    slug: "full-sweep",
-    name: "Full Sweep",
-    description: "Secure deployments in every zone in a single round.",
-    requirement: "All zones in one round",
-    image: "/badges/full-sweep.svg",
   },
   {
     slug: "weekly-grinder",
@@ -167,5 +174,12 @@ export const BADGES: Badge[] = [
     description: "Win the Bushwick zone for your Faction.",
     requirement: "Capture Bushwick",
     image: "/badges/zone-bushwick.svg",
+  },
+  {
+    slug: "full-sweep",
+    name: "Full Sweep",
+    description: "Occupy every zone during a single round.",
+    requirement: "Capture all zones in a round",
+    image: "/badges/full-sweep.svg",
   },
 ];

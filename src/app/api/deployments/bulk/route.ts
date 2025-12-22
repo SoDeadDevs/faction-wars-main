@@ -177,6 +177,34 @@ export async function POST(req: Request) {
     try {
       const supabaseAdmin = assertSupabaseAdmin();
 
+      // First-time deployment badge (Grunt)
+      const { count: totalAfter, error: totalErr } = await supabaseAdmin
+        .from("deployments")
+        .select("id", { count: "exact", head: true })
+        .eq("wallet_address", address);
+      if (totalErr) {
+        console.error("[grunt] count query failed", totalErr);
+      } else if (typeof totalAfter === "number" && totalAfter > 0 && totalAfter === saved.length) {
+        // If total deployments equal the just-saved ones, this was the first deployment batch.
+        await awardBadgeToWallet(address, "grunt", { context: { round_id: round.id, saved } });
+      }
+
+      // Novice — deploy to 3 distinct rounds (future badges can add thresholds here)
+      const { data: roundRows, error: roundCountErr } = await supabaseAdmin
+        .from("deployments")
+        .select("round_id")
+        .eq("wallet_address", address);
+      if (roundCountErr) {
+        console.error("[novice] round count failed", roundCountErr);
+      } else {
+        const distinctRounds = new Set((roundRows ?? []).map((r: any) => r.round_id)).size;
+        if (distinctRounds >= 3) {
+          await awardBadgeToWallet(address, "novice", {
+            context: { total_rounds: distinctRounds },
+          });
+        }
+      }
+
       // Early Bird — deploy within first hour of round start
       const now = Date.now();
       const startSource =
