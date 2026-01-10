@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 function hasRoundEnded(weekEnd: string | null | undefined): boolean {
   if (!weekEnd) return false;

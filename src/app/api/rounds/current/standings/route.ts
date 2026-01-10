@@ -4,6 +4,7 @@ import { awardBadgeToWallet, zoneBadgeSlugFromSlug } from "@/lib/badge-awards";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+export const revalidate = 0;
 
 function hasRoundEnded(weekEnd: string | null | undefined): boolean {
   if (!weekEnd) return false;
