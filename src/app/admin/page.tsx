@@ -64,6 +64,10 @@ export default function AdminPage() {
   const [badgeResults, setBadgeResults] = useState<
     { slug: string; name: string; earned_at: string; description?: string; requirement?: string; image?: string | null }[]
   >([]);
+  const [factionMembers, setFactionMembers] = useState<
+    Record<string, { faction: { slug: string; name: string; color: string | null }; users: { label: string; address: string }[] }>
+  >({});
+  const [factionMembersStatus, setFactionMembersStatus] = useState("");
 
   useEffect(() => {
     if (!isAuthorized) {
@@ -301,6 +305,21 @@ export default function AdminPage() {
     }
   }
 
+  async function loadFactionMembers() {
+    if (!isAuthorized) return;
+    setFactionMembersStatus("Loading faction members…");
+    try {
+      const res = await fetch(`/api/admin/factions/members?wallet=${walletAddress}`, { cache: "no-store" });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Failed to load faction members");
+      setFactionMembers(json.members ?? {});
+      setFactionMembersStatus("");
+    } catch (err: any) {
+      setFactionMembers({});
+      setFactionMembersStatus(err?.message || "Failed to load faction members.");
+    }
+  }
+
   function formatRange(round: RoundHistory) {
     return `${round.week_start} → ${round.week_end}`;
   }
@@ -507,6 +526,54 @@ export default function AdminPage() {
                   </ul>
                 </section>
               )}
+
+              <section className="rounded-2xl border border-neutral-800 p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-xl font-semibold">Faction Members</h2>
+                    <p className="text-sm text-neutral-400">View who is in each faction.</p>
+                  </div>
+                  <button
+                    onClick={loadFactionMembers}
+                    className="rounded-full border border-neutral-700 px-3 py-1 text-sm text-neutral-300 hover:bg-neutral-900"
+                  >
+                    Refresh
+                  </button>
+                </div>
+                {factionMembersStatus && <p className="text-sm text-neutral-400">{factionMembersStatus}</p>}
+                {!factionMembersStatus && (
+                  <div className="grid gap-4 md:grid-cols-3">
+                    {Object.values(factionMembers).map(({ faction, users }) => (
+                      <div
+                        key={faction.slug}
+                        className="rounded-xl border border-neutral-800 p-4 space-y-2"
+                        style={{
+                          borderColor: faction.color || undefined,
+                          background: faction.color ? `${faction.color}15` : undefined,
+                        }}
+                      >
+                        <div className="text-sm font-semibold" style={{ color: faction.color || "#e5e7eb" }}>
+                          {faction.name}
+                        </div>
+                        <ul className="space-y-1 text-sm text-neutral-200">
+                          {users.length ? (
+                            users.map((u) => (
+                              <li key={u.address} className="truncate">
+                                {u.label}
+                              </li>
+                            ))
+                          ) : (
+                            <li className="text-neutral-500 text-xs">No members</li>
+                          )}
+                        </ul>
+                      </div>
+                    ))}
+                    {Object.keys(factionMembers).length === 0 && (
+                      <p className="text-sm text-neutral-500 md:col-span-3">No faction members found.</p>
+                    )}
+                  </div>
+                )}
+              </section>
             </>
           ) : activeTab === "history" ? (
             <section className="rounded-2xl border border-neutral-800 p-6 space-y-4">
